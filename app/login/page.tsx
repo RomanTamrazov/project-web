@@ -1,4 +1,31 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}', 
+    './pages/**/*.{js,ts,jsx,tsx}', 
+    './components/**/*.{js,ts,jsx,tsx}'
+  ],
+  theme: {
+    extend: {
+      animation: {
+        'paw-move': 'pawMove 2s ease-in-out infinite',
+        'paw-move-delayed': 'pawMove 2s ease-in-out infinite 1s',
+        'breathe': 'breathe 4s ease-in-out infinite',
+      },
+      keyframes: {
+        pawMove: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(15deg)' },
+        },
+        breathe: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
 'use client';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -33,21 +60,43 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-tr from-purple-400 via-pink-400 to-red-400 p-6">
-      <div className="relative mb-8 w-40 h-40">
-        {/* Котик с анимацией лапок */}
-        <div className="cat">
-          <div className="ear ear-left"></div>
-          <div className="ear ear-right"></div>
-          <div className="face">
-            <div className="eye eye-left"></div>
-            <div className="eye eye-right"></div>
-            <div className="nose"></div>
-            <div className="mouth"></div>
-          </div>
-          <div className="paw paw-left"></div>
-          <div className="paw paw-right"></div>
-        </div>
+      {/* Анимированный котик */}
+      <div className="relative mb-10 w-40 h-40 animate-breathe rounded-full bg-[#f3c6a5] shadow-inner">
+        {/* Уши */}
+        <div
+          className="absolute top-[-30px] left-4 w-12 h-12 rounded-tl-full rounded-tr-full bg-[#f3c6a5] border-2 border-[#d2996e] shadow-inner
+            origin-bottom-right animate-paw-move"
+          style={{ transformOrigin: 'bottom right' }}
+        ></div>
+        <div
+          className="absolute top-[-30px] right-4 w-12 h-12 rounded-tl-full rounded-tr-full bg-[#f3c6a5] border-2 border-[#d2996e] shadow-inner
+            origin-bottom-left animate-paw-move-delayed"
+          style={{ transformOrigin: 'bottom left' }}
+        ></div>
+        {/* Лицо */}
+        <div className="absolute top-10 left-5 right-5 bottom-5 rounded-full bg-[#fce3d1] shadow-inner"></div>
+        {/* Глаза */}
+        <div className="absolute top-20 left-12 w-6 h-6 rounded-full bg-[#6b4c3b] shadow-inner"></div>
+        <div className="absolute top-20 right-12 w-6 h-6 rounded-full bg-[#6b4c3b] shadow-inner"></div>
+        {/* Нос */}
+        <div className="absolute top-[80px] left-1/2 w-4 h-3 rounded-full bg-[#d2996e] shadow-inner" style={{ marginLeft: '-0.5rem' }}></div>
+        {/* Рот */}
+        <div
+          className="absolute top-[95px] left-1/2 w-9 h-5 border-b-2 border-[#a15e3e] rounded-b-full"
+          style={{ marginLeft: '-1.125rem' }}
+        ></div>
+        {/* Лапки */}
+        <div
+          className="absolute bottom-2 left-4 w-14 h-10 rounded-b-full rounded-t-[40%] bg-[#f3c6a5] border-2 border-[#d2996e] shadow-inner
+          origin-top-right animate-paw-move"
+        ></div>
+        <div
+          className="absolute bottom-2 right-4 w-14 h-10 rounded-b-full rounded-t-[40%] bg-[#f3c6a5] border-2 border-[#d2996e] shadow-inner
+          origin-top-left animate-paw-move-delayed"
+        ></div>
       </div>
+
+      {/* Форма входа */}
       <div className="w-full max-w-md rounded-3xl bg-white bg-opacity-90 p-10 shadow-2xl backdrop-blur-md">
         <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-900">Вход</h2>
         <form onSubmit={submit} className="space-y-6">
@@ -73,125 +122,6 @@ export default function LoginPage() {
           </Button>
         </form>
       </div>
-
-      <style jsx>{`
-        .cat {
-          position: relative;
-          width: 160px;
-          height: 160px;
-          background: #f3c6a5;
-          border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
-          box-shadow: inset 0 10px 15px rgba(0,0,0,0.1);
-          animation: breathe 4s ease-in-out infinite;
-        }
-        .ear {
-          position: absolute;
-          top: -30px;
-          width: 50px;
-          height: 50px;
-          background: #f3c6a5;
-          border-radius: 50% 50% 0 0;
-          border: 2px solid #d2996e;
-          box-shadow: inset 0 5px 8px rgba(0,0,0,0.1);
-          transform-origin: bottom center;
-          animation: paw-move 2s ease-in-out infinite;
-        }
-        .ear-left {
-          left: 10px;
-          transform-origin: bottom right;
-          animation-delay: 0s;
-        }
-        .ear-right {
-          right: 10px;
-          transform-origin: bottom left;
-          animation-delay: 1s;
-        }
-        .face {
-          position: absolute;
-          top: 40px;
-          left: 20px;
-          right: 20px;
-          bottom: 20px;
-          background: #fce3d1;
-          border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
-          box-shadow: inset 0 5px 8px rgba(0,0,0,0.05);
-        }
-        .eye {
-          position: absolute;
-          top: 40px;
-          width: 24px;
-          height: 24px;
-          background: #6b4c3b;
-          border-radius: 50%;
-          box-shadow: inset 0 2px 4px rgba(255,255,255,0.6);
-        }
-        .eye-left {
-          left: 40px;
-        }
-        .eye-right {
-          right: 40px;
-        }
-        .nose {
-          position: absolute;
-          top: 80px;
-          left: 50%;
-          width: 16px;
-          height: 12px;
-          margin-left: -8px;
-          background: #d2996e;
-          border-radius: 50% / 70%;
-          box-shadow: inset 0 3px 5px rgba(0,0,0,0.15);
-        }
-        .mouth {
-          position: absolute;
-          top: 95px;
-          left: 50%;
-          width: 36px;
-          height: 20px;
-          margin-left: -18px;
-          border-bottom: 3px solid #a15e3e;
-          border-radius: 0 0 18px 18px;
-        }
-        .paw {
-          position: absolute;
-          bottom: 10px;
-          width: 60px;
-          height: 40px;
-          background: #f3c6a5;
-          border-radius: 40% 40% 50% 50% / 60% 60% 50% 50%;
-          border: 2px solid #d2996e;
-          box-shadow: inset 0 5px 8px rgba(0,0,0,0.1);
-          animation: paw-move 2s ease-in-out infinite;
-        }
-        .paw-left {
-          left: 10px;
-          animation-delay: 0s;
-          transform-origin: top right;
-        }
-        .paw-right {
-          right: 10px;
-          animation-delay: 1s;
-          transform-origin: top left;
-        }
-
-        @keyframes paw-move {
-          0%, 100% {
-            transform: rotate(0deg);
-          }
-          50% {
-            transform: rotate(15deg);
-          }
-        }
-
-        @keyframes breathe {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-      `}</style>
     </div>
   );
 }
