@@ -32,16 +32,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-tr from-purple-400 via-pink-400 to-red-400 p-6">
-      {/* Фото котика сверху */}
-      <img
-        src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg"
-        alt="Cute cat"
-        className="w-48 h-48 rounded-full shadow-lg mb-8 object-cover"
-      />
-
-      {/* Форма входа */}
-      <div className="w-full max-w-md rounded-3xl bg-white bg-opacity-90 p-10 shadow-2xl backdrop-blur-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-400 via-pink-400 to-red-400 p-0">
+      <div className="w-full max-w-lg rounded-3xl bg-white bg-opacity-90 p-10 shadow-2xl backdrop-blur-md mx-0">
         <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-900">Вход</h2>
         <form onSubmit={submit} className="space-y-6">
           <Input
