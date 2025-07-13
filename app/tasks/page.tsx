@@ -16,7 +16,28 @@ interface Task {
   category: string;
 }
 
-const TasksCategoryEnum = ['GENERAL', 'URGENT', 'IMPORTANT'] as const;
+const TasksCategoryEnum = [
+  'multifactor_relevancy',
+  'logical_connection',
+  'attitude',
+  'size_matches',
+  'product_quality',
+  'composition',
+  'wear',
+  'product_contents',
+  'multimodal_matching',
+  'argument_classification',
+  'source_reliability',
+  'contraditctions_check',
+  'intent_analysis',
+  'manipulation_detection',
+  'genre_and_style',
+  'counterfeit_check',
+  'material_type',
+  'packaging_integrity',
+  'color_comparison',
+  'installation_check',
+] as const;
 
 type Tab = 'text' | 'images';
 
@@ -194,7 +215,7 @@ function TasksPage() {
           >
             {TasksCategoryEnum.map((c) => (
               <option key={c} value={c}>
-                {c}
+                {c.replace(/_/g, ' ')}
               </option>
             ))}
           </select>
@@ -241,7 +262,7 @@ function TasksPage() {
             ) : null}
 
             <p className="text-sm text-gray-500">User ID: {t.user_id}</p>
-            <p className="text-sm text-gray-500">Категория: {t.category}</p>
+            <p className="text-sm text-gray-500">Категория: {t.category.replace(/_/g, ' ')}</p>
           </div>
         ))}
       </div>
@@ -250,4 +271,5 @@ function TasksPage() {
 }
 
 export default withAuth(TasksPage);
+
 
