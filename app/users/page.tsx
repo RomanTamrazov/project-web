@@ -19,11 +19,29 @@ function UsersPage() {
     username: '',
     email: '',
     password: '',
-    confirmPassword: '', // Added confirm password field
+    confirmPassword: '',
   });
+
+  // Загружаем пользователей при монтировании
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const res = await fetch('/api/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUsers(data);
+      }
+    };
+    fetchUsers();
+  }, [token]);
 
   const create = async (e: FormEvent) => {
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      alert('Пароли не совпадают');
+      return;
+    }
     const res = await fetch('/api/users/registration', {
       method: 'POST',
       headers: {
@@ -42,67 +60,100 @@ function UsersPage() {
         username: '',
         email: '',
         password: '',
-        confirmPassword: '', // Reset confirm password too
+        confirmPassword: '',
       });
-      // fetchUsers(); // Uncomment if you want to refresh the user list
+      // Обновим список пользователей после создания нового
+      const usersRes = await fetch('/api/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (usersRes.ok) {
+        const data = await usersRes.json();
+        setUsers(data);
+      }
+    } else {
+      const errorData = await res.json();
+      alert(errorData.message || 'Ошибка при создании пользователя');
     }
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-3xl mx-auto px-4 py-6 space-y-8">
+      {/* Форма создания пользователя */}
       <form
         onSubmit={create}
-        className="rounded-xl bg-white p-6 shadow-md space-y-4"
+        className="bg-white rounded-2xl p-8 shadow-lg space-y-6"
+        noValidate
       >
-        <h2 className="text-lg font-semibold">Создать пользователя</h2>
+        <h2 className="text-2xl font-semibold text-gray-900 text-center">Создать пользователя</h2>
         <Input
           placeholder="Логин"
           value={form.username}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
+          className="rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          required
+          autoComplete="username"
         />
         <Input
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          required
+          autoComplete="email"
         />
         <Input
           type="password"
           placeholder="Пароль"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          required
+          autoComplete="new-password"
+          minLength={6}
         />
         <Input
           type="password"
           placeholder="Подтвердите пароль"
           value={form.confirmPassword}
           onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+          className="rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          required
+          autoComplete="new-password"
+          minLength={6}
         />
-        {/* <select
-          className="w-full rounded-xl border border-gray-300 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={form.role}
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
+        <Button
+          type="submit"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-2xl transition-shadow shadow-md hover:shadow-lg"
         >
-          <option value="user">user</option>
-          <option value="admin">admin</option>
-        </select> */}
-        <Button type="submit">Создать</Button>
+          Создать
+        </Button>
       </form>
 
-      <div className="rounded-xl bg-white p-6 shadow-md">
-        <h2 className="mb-4 text-lg font-semibold">Пользователи</h2>
-        <ul className="space-y-2">
-          {users.map((u) => (
-            <li key={u.id} className="flex justify-between items-center rounded-lg p-2 hover:bg-gray-50">
-              <div>
-                <span className="block font-medium">{u.username}</span>
-                <span className="text-sm text-gray-600">{u.email}</span>
-              </div>
-              <span className="rounded-full bg-gray-200 px-2 text-sm">{u.role}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Список пользователей */}
+      <section className="bg-white rounded-2xl p-6 shadow-lg">
+        <h2 className="mb-6 text-xl font-semibold text-gray-900">Пользователи</h2>
+        {users.length === 0 ? (
+          <p className="text-center text-gray-500">Пользователи не найдены</p>
+        ) : (
+          <ul className="divide-y divide-gray-200">
+            {users.map((u) => (
+              <li
+                key={u.id}
+                className="flex justify-between items-center py-3 hover:bg-indigo-50 rounded-lg px-3 transition"
+              >
+                <div>
+                  <span className="block font-medium text-gray-800">{u.username}</span>
+                  <span className="text-sm text-gray-500">{u.email}</span>
+                </div>
+                <span className="inline-block rounded-full bg-indigo-100 text-indigo-700 px-3 py-1 text-sm font-semibold select-none">
+                  {u.role}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
