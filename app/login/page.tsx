@@ -32,8 +32,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-400 via-pink-400 to-red-400 p-0">
-      <div className="w-full max-w-lg rounded-3xl bg-white bg-opacity-90 p-10 shadow-2xl backdrop-blur-md mx-0">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-400 via-pink-400 to-red-400 py-10 px-0 sm:px-4">
+      <div className="w-full max-w-lg mx-4 sm:mx-auto rounded-3xl bg-white bg-opacity-90 p-8 sm:p-10 shadow-2xl backdrop-blur-md">
         <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-900">Вход</h2>
         <form onSubmit={submit} className="space-y-6">
           <Input
