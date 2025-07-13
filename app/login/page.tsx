@@ -1,32 +1,5 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx}', 
-    './pages/**/*.{js,ts,jsx,tsx}', 
-    './components/**/*.{js,ts,jsx,tsx}'
-  ],
-  theme: {
-    extend: {
-      animation: {
-        'paw-move': 'pawMove 2s ease-in-out infinite',
-        'paw-move-delayed': 'pawMove 2s ease-in-out infinite 1s',
-        'breathe': 'breathe 4s ease-in-out infinite',
-      },
-      keyframes: {
-        pawMove: {
-          '0%, 100%': { transform: 'rotate(0deg)' },
-          '50%': { transform: 'rotate(15deg)' },
-        },
-        breathe: {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.05)' },
-        },
-      },
-    },
-  },
-  plugins: [],
-};
 'use client';
+
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
