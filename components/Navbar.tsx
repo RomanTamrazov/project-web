@@ -14,7 +14,7 @@ export default function Navbar() {
           <Link href="/tasks" className="hover:underline">
             Задачи
           </Link>
-          {role === 'admin' && (
+          {role === 'ROLE_ADMIN' && (
             <Link href="/users" className="hover:underline">
               Пользователи
             </Link>

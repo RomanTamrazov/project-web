@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 interface AuthState {
   token: string | null;
   role: string | null;
-  nickname: string | null;
+  username: string | null;
 }
 
 interface AuthContextProps extends AuthState {
@@ -25,12 +25,16 @@ const parseToken = (jwt: string) => {
   try {
     const base64 = jwt.split('.')[1];
     const json = JSON.parse(atob(base64));
+    // Handle both array and string roles
+    const role = Array.isArray(json.roles) 
+      ? json.roles[0] 
+      : json.role || json.roles;
     return {
-      role: json.role as string,
-      nickname: json.nickname as string,
+      role: role?.toUpperCase(), // Standardize to uppercase
+      username: json.username,
     };
   } catch {
-    return { role: null, nickname: null };
+    return { role: null, username: null };
   }
 };
 
@@ -39,26 +43,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AuthState>({
     token: null,
     role: null,
-    nickname: null,
+    username: null,
   });
 
   const login = (token: string) => {
     localStorage.setItem('token', token);
-    const { role, nickname } = parseToken(token);
-    setState({ token, role, nickname });
+    const { role, username } = parseToken(token);
+    setState({ token, role, username });
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    setState({ token: null, role: null, nickname: null });
+    setState({ token: null, role: null, username: null });
     router.push('/login');
   };
 
   useEffect(() => {
     const stored = localStorage.getItem('token');
     if (stored) {
-      const { role, nickname } = parseToken(stored);
-      setState({ token: stored, role, nickname });
+      const { role, username } = parseToken(stored);
+      setState({ token: stored, role, username });
     }
   }, []);
 

@@ -10,12 +10,12 @@ const withAuth = (Component: any, allowed: string[] = []) => {
 
     useEffect(() => {
       if (!token) router.replace('/login');
-      else if (allowed.length && !allowed.includes(role || ''))
+      else if (allowed.length && !allowed.some(allowedRole => role?.endsWith(allowedRole)))
         router.replace('/');
     }, [token, role]);
 
     if (!token) return null;
-    if (allowed.length && !allowed.includes(role || '')) return null;
+    if (allowed.length && !allowed.some(allowedRole => role?.endsWith(allowedRole))) return null;
 
     return <Component {...props} />;
   };
